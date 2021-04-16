@@ -1,96 +1,116 @@
-import React, { Component } from 'react'
+import React, { useContext, useState, useEffect } from "react";
+import { LoginContext } from "../Context/LoginContext";
 
-export class Login extends Component {
-    constructor(props) {
-        super(props);
-    
-        this.state = {
-             username:'',
-             password:'',
-             allUserDetails:[],
-             
-             flag:false
-        }
-    }
-    onchange=(e)=>{
-this.setState({
-    [e.target.name]:e.target.value
-})
-    }
+function Login(props) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [allUserDetails, setAllUserDetails] = useState([]);
+  const { changeLoginStatus } = useContext(LoginContext);
 
-    componentWillMount=()=>{
-        this.setState({
-            allUserDetails:JSON.parse(localStorage.getItem('UsersData'))||[]
-        })
-    }
+  useEffect(() => {
+    let allUserDetails = JSON.parse(localStorage.getItem("UsersData"));
+    setAllUserDetails(allUserDetails);
+  }, []);
 
-    checkUserValid=()=>{
-        const username=this.state.username
-        const userpassword=this.state.password
-        const AllUserDetails=this.state.allUserDetails
-        
-        console.log(AllUserDetails);
-        console.log(this.state.allUserDetails);
-        
-        for(var user of AllUserDetails){
-            
-            
-            this.setState({flag:true})
-            if(username==user.Email && userpassword ==user.Password && user.isAdmin==true){
-        const ss= localStorage.setItem('loginStatus',JSON.stringify({flag:true}))
-        this.props.history.push('/admin')
-     
-     }
-     
-    else if(username==user.Email && userpassword ==user.Password && user.isAdmin==false){
-        const ss= localStorage.setItem('loginStatus',JSON.stringify({flag:true}))
+  const checkUserValid = () => {
+    var c = 0;
+    console.log(allUserDetails);
+    allUserDetails.map((obj) => {
+      if (
+        obj.Email == username &&
+        obj.Password == password &&
+        obj.isAdmin == false
+      ) {
+        c = 1;
+      } else if (
+        obj.Email == username &&
+        obj.Password == password &&
+        obj.isAdmin == true
+      ) {
+        c = 2;
+      }
+    });
 
-       this.props.history.push(`/leaveapp/${username}`)
-    alert('login successfull')
+    if (c == 1) {
+      localStorage.setItem(
+        "loginStatus",
+        JSON.stringify([{ loginStatus: true }])
+      );
+      changeLoginStatus(true);
+      props.history.push(`/leaveapp/${username}`);
+      alert("login successfull");
+    } else if (c == 2) {
+      localStorage.setItem(
+        "loginStatus",
+        JSON.stringify([{ loginStatus: true }])
+      );
+      alert("called local");
+      changeLoginStatus(true);
+
+      props.history.push("/admin");
+    } else {
+      localStorage.setItem(
+        "loginStatus",
+        JSON.stringify([{ loginStatus: false }])
+      );
+      changeLoginStatus(false);
     }
-    else{
-        
-    }
-    
-   
+  };
+
+  return (
+    <div>
+      <div className="container center form-group">
+        <center>
+          <h3> Log In </h3>
+          <div className="row">
+            <form autoComplete="off" className="m-5 col-md-10">
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="form-control validate"
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-control validate"
+                  />
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn btn-primary "
+                onClick={checkUserValid}
+              >
+                {" "}
+                LogIn
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button
+                type="button"
+                className="btn btn-primary "
+                // onClick={this.Signup}
+              >
+                {" "}
+                SignUp{" "}
+              </button>
+            </form>
+          </div>
+        </center>
+      </div>
+    </div>
+  );
 }
 
-    }
-
-    Signup=()=>{
-        this.props.history.push('/signup')
-    }
-    render() {
-        return (
-            <div className='container center form-group'>
-                <center>
-                    <h3> Log In </h3>
-                    <div className="row"> 
-                    <form autoComplete='off' className="m-5 col-md-10">
-                        <div className='row'> 
-                        <div className='input-field col s12'>
-                            <input type='text' name='username' placeholder='username' value={this.state.username} onChange={this.onchange} className='form-control validate'/>
-                             </div>
-                        </div>
-                        <div className='row'> 
-                        <div className='input-field col s12'>
-                            <input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.onchange} className='form-control validate'/>
-                             </div>
-                        </div>
-
-
-
-<button type='button' className='btn btn-primary ' onClick={this.checkUserValid} > LogIn</button>&nbsp;&nbsp;&nbsp;
-<button type='button' className='btn btn-primary ' onClick={this.Signup}> SignUp </button>
-
-                    </form>
-
-
-                    </div>
-                </center>
-            </div>
-        )
-    }
-}
-
-export default Login
+export default Login;

@@ -10,7 +10,7 @@ constructor(props) {
     }
 }
 componentDidMount(){
-    var arr=JSON.parse(localStorage.getItem('leaveApplication'))
+    var arr=JSON.parse(localStorage.getItem('leaveApplication'))||[]
     this.setState({
         allviewApplication:arr
 
@@ -84,7 +84,7 @@ return this.state.allviewApplication.map((application,index)=>{
     render() {
         return (
             <div className='container'>
-                 <button type="button" className='btn btn-primary right' onClick={this.signOut}> LogOut </button>
+                 {/* <button type="button" className='btn btn-primary right' onClick={this.signOut}> LogOut </button> */}
                 <h2 style={{fontStyle:'bold'}}><i> WELCOME Admin </i></h2>
                 <center><h3 className='text-danger'>   Leave summary   </h3>  </center>
                    

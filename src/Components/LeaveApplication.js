@@ -207,22 +207,22 @@ if (this.state.Reason==='') {
 
  
 
-  logOut = () => {
-    localStorage.setItem('loginStatus',JSON.stringify({flag:false}))
-    this.props.history.push("/Login");
-  };
+  // logOut = () => {
+  //   localStorage.setItem('loginStatus',JSON.stringify([{loginStatus:false}]))
+  //   this.props.history.push("/Login");
+  // };
 
   render() {
     return (
       <div>
-        <button
+        {/* <button
           type="button"
           onClick={this.logOut}
           className="btn btn-primary right"
         >
           {" "}
           LogOut
-        </button>
+        </button> */}
         <h2>Welcome {this.state.currentUserDetails.FirstName}</h2>
         <h2>You can enter your Leave Details here. </h2>
         <div id="role-form-outer-div">
